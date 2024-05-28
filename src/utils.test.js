@@ -1,8 +1,13 @@
 const { 
   getAnimalFilterValue, 
   getFilteredData,
-  nameOfTheAnimalMatchesFilter
+  nameOfTheAnimalMatchesFilter,
+  shouldDisplayCounter
 } = require("./utils.js")
+
+afterEach(() => {
+  jest.restoreAllMocks()
+});
 
 describe("Filtering argument", () => {
   test("It should use default filter parameters (no filter) if argument are not well formated", () => {
@@ -176,4 +181,45 @@ describe("Filtered Data based on filter", () => {
       expect(isValidName).toBe(expectedResult)
     }
   )
+})
+
+describe("Counting peoples and animals", () => {
+  test.each([
+    ['--count', true],
+    ['', false],
+    ["--filter=ry", false],
+  ])("It should extract if counter should be displayed from script parameters ('%s' => %s)", (argument, expected) => {
+    jest.replaceProperty(process, 'argv', ['node', 'app.js', argument])
+    expect(shouldDisplayCounter()).toBe(expected)
+  })
+
+  test("It should display counter of child next to country and people name", () => {
+    const originalDatas = [{
+      name: 'Dillauti',
+      people: [{
+        name: 'Winifred Graham',
+        animals: [
+          {name: 'Anoa'},
+          {name: 'Duck'}
+        ]
+      }]
+    }]
+
+    const showCounter = true
+    const result = getFilteredData(originalDatas, "", showCounter)
+
+    expect(Array.isArray(result)).toBe(true)
+    expect(result).not.toEqual(originalDatas)
+    const expectedResult = [{
+      name: 'Dillauti [1]',
+      people: [{
+        name: 'Winifred Graham [2]',
+        animals: [
+          {name: 'Anoa'},
+          {name: 'Duck'}
+        ]
+      }]
+    }]
+    expect(result).toEqual(expectedResult)
+  })
 })

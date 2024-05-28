@@ -10,6 +10,15 @@ const getAnimalFilterValue = () => {
   return filterValue
 }
 
+const shouldDisplayCounter = () => {
+  const args = process?.argv
+  return args.some(argument => argument === "--count")
+}
+
+const getNameWithCounter = (previousName, nbOfChild) => {
+  return `${previousName} [${nbOfChild}]`
+}
+
 const nameOfTheAnimalMatchesFilter = (animalName, filterValue) => {
   if(!filterValue || typeof filterValue !== "string") return true
   const lowerCasedAnimalName = animalName.toLowerCase()
@@ -25,30 +34,37 @@ const getFilteredAnimalsByName = (previousAnimals, filterValue) => {
   }, [])
 }
 
-const getFilteredPeopleByCountry = (initialCountryTree, filterValue) => {
+const getFilteredPeopleByCountry = (initialCountryTree, filterValue, showCounter) => {
   return initialCountryTree.people.reduce((acc, person) => {
     let animals = getFilteredAnimalsByName(person.animals, filterValue)
-    let shouldAddPeopleToList = Boolean(animals.length)
+    let nbOfAnimals = animals.length
+    let shouldAddPeopleToList = Boolean(nbOfAnimals)
     if(!shouldAddPeopleToList) return [...acc]
-    let filteredPerson = { ...person, animals }
+    let filteredPerson = { 
+      ...person,
+      ...showCounter && { name: getNameWithCounter(person.name, nbOfAnimals) },
+      animals
+    }
     return [...acc, filteredPerson]
   }, [])
 }
 
-const getFilteredData = (originalDatas, filterValue) => {
+const getFilteredData = (originalDatas, filterValue, showCounter) => {
   if(!Array.isArray(originalDatas) || originalDatas.length === 0) {
     return []
   }
-  if(!filterValue || typeof filterValue !== "string") {
+  if(!showCounter && (!filterValue || typeof filterValue !== "string")) {
     return [...originalDatas]
   }
 
-  return originalDatas.reduce((acc, initialCountryTree) => {
-    let filteredPeople = getFilteredPeopleByCountry(initialCountryTree, filterValue)
-    let shouldKeepCountryInTree = Boolean(filteredPeople.length)
+  return originalDatas.reduce((acc, country) => {
+    let filteredPeople = getFilteredPeopleByCountry(country, filterValue, showCounter)
+    let nbOfPeople = filteredPeople.length
+    let shouldKeepCountryInTree = Boolean(nbOfPeople)
     if(!shouldKeepCountryInTree) return [...acc]
     let filteredCountry = { 
-      ...initialCountryTree,
+      ...country,
+      ...showCounter && { name: getNameWithCounter(country.name, nbOfPeople) },
       people: filteredPeople
     }
     return [...acc, filteredCountry]
@@ -58,5 +74,6 @@ const getFilteredData = (originalDatas, filterValue) => {
 module.exports = {
   getAnimalFilterValue,
   getFilteredData,
-  nameOfTheAnimalMatchesFilter
+  nameOfTheAnimalMatchesFilter,
+  shouldDisplayCounter
 }
