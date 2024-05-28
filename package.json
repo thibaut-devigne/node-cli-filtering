@@ -1,0 +1,24 @@
+{
+  "name": "cli-filtering",
+  "version": "1.0.0",
+  "description": "CLI for filtering and counting complex object",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thibaut-devigne/node-cli-filtering.git"
+  },
+  "author": "Thibaut Devigne",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thibaut-devigne/node-cli-filtering/issues"
+  },
+  "homepage": "https://github.com/thibaut-devigne/node-cli-filtering#readme",
+  "dependencies": {
+    "jest": "^29.7.0"
+  }
+}
