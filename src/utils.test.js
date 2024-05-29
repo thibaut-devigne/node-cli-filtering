@@ -1,5 +1,5 @@
 const { 
-  getAnimalFilterValue, 
+  getAnimalFilterPattern, 
   getFilteredData,
   nameOfTheAnimalMatchesFilter,
   shouldDisplayCounter
@@ -12,14 +12,14 @@ afterEach(() => {
 describe("Filtering argument", () => {
   test("It should use default filter parameters (no filter) if argument are not well formated", () => {
     jest.replaceProperty(process, 'argv', "dummy process args value")
-    const result = getAnimalFilterValue()
+    const result = getAnimalFilterPattern()
     expect(typeof result).toBe("string")
     expect(result).toBe("")
   })
 
   test("It should extract filter value from script parameters", () => {
     jest.replaceProperty(process, 'argv', ['node', 'app.js', '--filter=ry'])
-    const result = getAnimalFilterValue()
+    const result = getAnimalFilterPattern()
     expect(typeof result).toBe("string")
     expect(result).toBe("ry")
   })
@@ -29,14 +29,14 @@ describe("Filtering argument", () => {
     ['--filter='],
   ])("It should use empty filter value if no valid value was provided ('%s')", (filterArgument) => {
     jest.replaceProperty(process, 'argv', ['node', 'app.js', filterArgument])
-    const result = getAnimalFilterValue()
+    const result = getAnimalFilterPattern()
     expect(typeof result).toBe("string")
     expect(result).toBe("")
   })
 
   test("It should use empty filter value if no valid value was provided (none)", () => {
     jest.replaceProperty(process, 'argv', ['node', 'app.js'])
-    const result = getAnimalFilterValue()
+    const result = getAnimalFilterPattern()
     expect(typeof result).toBe("string")
     expect(result).toBe("")
   })
@@ -174,7 +174,8 @@ describe("Filtered Data based on filter", () => {
     ["Scooby-Doo", 12, true],
     ["Scooby-Doo", "Do", true],
     ["Scooby-Doo", "Sam", false],
-    ["Scooby-Doo", "do", true],
+    ["Scooby-Doo", "oo$", true],
+    ["Scooby-Doo", "ob|ry", true],
   ])("It should check if animal name pass filter (name: %s --- filter: %s => %s)", 
     (animalName, filterValue, expectedResult) => {
       const isValidName = nameOfTheAnimalMatchesFilter(animalName, filterValue)

@@ -1,13 +1,13 @@
 const { data: originalDatas } = require("../data.js")
 const { 
-  getAnimalFilterValue,
+  getAnimalFilterPattern,
   shouldDisplayCounter,
   getFilteredData,
 } = require("./utils.js")
 
 function main() {
   const showCounter = shouldDisplayCounter()
-  const animalFilterValue = getAnimalFilterValue()
+  const animalFilterValue = getAnimalFilterPattern()
   const filteredData = getFilteredData(originalDatas, animalFilterValue, showCounter)
   return filteredData
 }

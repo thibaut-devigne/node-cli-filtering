@@ -1,4 +1,4 @@
-const getAnimalFilterValue = () => {
+const getAnimalFilterPattern = () => {
   const DEFAULT_FILTER_VALUE = ""
   const args = process?.argv
   if(!Array.isArray(args)) return DEFAULT_FILTER_VALUE
@@ -6,8 +6,8 @@ const getAnimalFilterValue = () => {
   const filterArg = args.find(arg => arg.includes("--filter="))
   if(!filterArg) return DEFAULT_FILTER_VALUE
 
-  const filterValue = filterArg.split("--filter=")[1]
-  return filterValue
+  const filterPattern = filterArg.split("--filter=")[1]
+  return filterPattern
 }
 
 const shouldDisplayCounter = () => {
@@ -19,24 +19,24 @@ const getNameWithCounter = (previousName, nbOfChild) => {
   return `${previousName} [${nbOfChild}]`
 }
 
-const nameOfTheAnimalMatchesFilter = (animalName, filterValue) => {
-  if(!filterValue || typeof filterValue !== "string") return true
-  const lowerCasedAnimalName = animalName.toLowerCase()
-  const lowerCasedFilter = filterValue.toLowerCase()
-  return lowerCasedAnimalName.includes(lowerCasedFilter)
+const nameOfTheAnimalMatchesFilter = (animalName, filterPattern) => {
+  if(!filterPattern || typeof filterPattern !== "string") return true
+  const regex = new RegExp(filterPattern)
+
+  return regex.test(animalName)
 }
 
-const getFilteredAnimalsByName = (previousAnimals, filterValue) => {
+const getFilteredAnimalsByName = (previousAnimals, filterPattern) => {
   return previousAnimals.reduce((acc, animal) => {
     const animalName = animal?.name
-    let match = nameOfTheAnimalMatchesFilter(animalName, filterValue)
+    let match = nameOfTheAnimalMatchesFilter(animalName, filterPattern)
     return match ? [...acc, {...animal}] : [...acc]
   }, [])
 }
 
-const getFilteredPeopleByCountry = (initialCountryTree, filterValue, showCounter) => {
+const getFilteredPeopleByCountry = (initialCountryTree, filterPattern, showCounter) => {
   return initialCountryTree.people.reduce((acc, person) => {
-    let animals = getFilteredAnimalsByName(person.animals, filterValue)
+    let animals = getFilteredAnimalsByName(person.animals, filterPattern)
     let nbOfAnimals = animals.length
     let shouldAddPeopleToList = Boolean(nbOfAnimals)
     if(!shouldAddPeopleToList) return [...acc]
@@ -49,16 +49,16 @@ const getFilteredPeopleByCountry = (initialCountryTree, filterValue, showCounter
   }, [])
 }
 
-const getFilteredData = (originalDatas, filterValue, showCounter) => {
+const getFilteredData = (originalDatas, filterPattern, showCounter) => {
   if(!Array.isArray(originalDatas) || originalDatas.length === 0) {
     return []
   }
-  if(!showCounter && (!filterValue || typeof filterValue !== "string")) {
+  if(!showCounter && (!filterPattern || typeof filterPattern !== "string")) {
     return [...originalDatas]
   }
 
   return originalDatas.reduce((acc, country) => {
-    let filteredPeople = getFilteredPeopleByCountry(country, filterValue, showCounter)
+    let filteredPeople = getFilteredPeopleByCountry(country, filterPattern, showCounter)
     let nbOfPeople = filteredPeople.length
     let shouldKeepCountryInTree = Boolean(nbOfPeople)
     if(!shouldKeepCountryInTree) return [...acc]
@@ -72,7 +72,7 @@ const getFilteredData = (originalDatas, filterValue, showCounter) => {
 }
 
 module.exports = {
-  getAnimalFilterValue,
+  getAnimalFilterPattern,
   getFilteredData,
   nameOfTheAnimalMatchesFilter,
   shouldDisplayCounter

@@ -29,11 +29,9 @@ node app.js --filter=ry --count
 ```
 
 ## Hypotheses
-I consider that the name of an animal could not be empty (minimum 1 character)
-I consider the example data tree is always valid and well formatted.
-I perform the filtering without worrying about case.
-I consider that if the filter is invalid then we do not filter the data and we return the entire tree.
-I consider that the "pattern passed as argument (e.g. `ry`)" is a string pattern and not a regex pattern
+I consider that the name of an animal could not be empty (minimum 1 character). \
+I consider the example data tree is always valid and well formatted. \
+I consider that if the filter is invalid then we do not filter the data and we return the entire tree. \
 
 
 ## Initial Subject
