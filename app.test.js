@@ -6,7 +6,7 @@ afterEach(() => {
 
 describe("Filtering value", () => {
   //ACCEPTANCE TEST - DOUBLE LOOP
-  test("it should filter peoples and coutries as in given exemple", () => {
+  test("it should filter people and coutries as in given exemple", () => {
     //ARRANGE
     jest.replaceProperty(process, 'argv', ['node', 'app.js', '--filter=ry'])
 
@@ -39,7 +39,7 @@ describe("Filtering value", () => {
   })
 })
 
-describe("Counting peoples and animals", () => {
+describe("Counting people and animals", () => {
   //ACCEPTANCE TEST - DOUBLE LOOP
   test("it should count people and animals as in given exemple", () => {
     //ARRANGE
@@ -81,7 +81,7 @@ describe("Counting peoples and animals", () => {
   })
 })
 
-test("it should count peoples and animals and filter by animal name", () => {
+test("it should count people and animals and filter by animal name", () => {
   //ARRANGE
   jest.replaceProperty(process, 'argv', ['node', 'app.js', '--filter=ry', '--count'])
 

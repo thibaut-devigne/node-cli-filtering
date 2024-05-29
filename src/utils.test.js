@@ -183,7 +183,7 @@ describe("Filtered Data based on filter", () => {
   )
 })
 
-describe("Counting peoples and animals", () => {
+describe("Counting people and animals", () => {
   test.each([
     ['--count', true],
     ['', false],
